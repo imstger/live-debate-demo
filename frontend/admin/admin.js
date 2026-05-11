@@ -22,6 +22,22 @@ window.SERVER_CONFIG = SERVER_CONFIG;
 // API_BASE只保留基础URL，具体路径在各个API函数中定义
 const API_BASE = `${SERVER_CONFIG.BASE_URL}/api/admin`;
 
+function unwrapApiData(result) {
+	if (!result || typeof result !== 'object') return result;
+	if (result.success === true && result.data !== undefined) return result.data;
+	if (result.code === 0 && result.data !== undefined) return result.data;
+	return result;
+}
+
+function normalizeStreams(result) {
+	const data = unwrapApiData(result);
+	if (Array.isArray(data)) return data;
+	if (data && Array.isArray(data.streams)) return data.streams;
+	if (data && Array.isArray(data.items)) return data.items;
+	if (data && Array.isArray(data.list)) return data.list;
+	return [];
+}
+
 // 全局状态（如果admin-api.js已经创建了简单的版本，这里会覆盖它）
 const globalState = window.globalState || {
 	isLive: false,
@@ -771,7 +787,8 @@ async function updateDashboard() {
 async function loadStreams() {
 	try {
 		const response = await fetch(`${API_BASE}/streams`);
-		const streams = await response.json();
+		const result = await response.json();
+		const streams = normalizeStreams(result);
 		
 		const streamList = document.getElementById('stream-list');
 		streamList.innerHTML = '';
@@ -939,7 +956,8 @@ async function deleteStream(id) {
 async function loadDebateSettings() {
 	try {
 		const response = await fetch(`${API_BASE}/debate`);
-		const debate = await response.json();
+		const result = await response.json();
+		const debate = unwrapApiData(result);
 		
 		document.getElementById('debate-title').value = debate.title || '';
 		document.getElementById('debate-description').value = debate.description || '';
@@ -1103,10 +1121,10 @@ async function loadLiveSetup() {
 		if (streamSelect) {
 			try {
 		const streamsResponse = await fetch(`${API_BASE}/streams`);
-		const streams = await streamsResponse.json();
+		const streamsResult = await streamsResponse.json();
+		const streams = normalizeStreams(streamsResult);
 		streamSelect.innerHTML = '<option value="">请选择直播流</option>';
 		
-				if (Array.isArray(streams)) {
 		streams.forEach(stream => {
 			if (stream.enabled) {
 				const option = document.createElement('option');
@@ -1115,7 +1133,6 @@ async function loadLiveSetup() {
 				streamSelect.appendChild(option);
 			}
 		});
-				}
 			} catch (error) {
 				console.warn('加载直播流列表失败:', error);
 			}
@@ -1162,7 +1179,8 @@ async function refreshSetupStreams(selectIdToChoose) {
 	const streamSelect = document.getElementById('setup-stream-id');
 	if (!streamSelect) return;
 	const response = await fetch(`${API_BASE}/streams`);
-	const streams = await response.json();
+	const result = await response.json();
+	const streams = normalizeStreams(result);
 	streamSelect.innerHTML = '<option value="">请选择直播流</option>';
 	streams.forEach(stream => {
 		if (stream.enabled) {
@@ -1759,7 +1777,8 @@ async function loadLiveSchedule() {
 	try {
 		// 加载直播流列表
 		const streamsResponse = await fetch(`${API_BASE}/streams`);
-		const streams = await streamsResponse.json();
+		const streamsResult = await streamsResponse.json();
+		const streams = normalizeStreams(streamsResult);
 		
 		const streamSelect = document.getElementById('schedule-stream-id');
 		streamSelect.innerHTML = '<option value="">使用默认启用的直播流</option>';
