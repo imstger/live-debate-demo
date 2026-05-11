@@ -3,6 +3,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const h5Root = path.join(root, 'dist', 'build', 'h5');
+const userH5Source = path.join(root, 'dist', 'dev', 'h5');
 const adminSource = path.join(root, 'admin');
 const adminTarget = path.join(h5Root, 'admin');
 const staticSource = path.join(root, 'static');
@@ -24,6 +25,13 @@ function copyDir(from, to) {
 if (!fs.existsSync(adminSource)) {
   console.warn('[copy-admin-to-h5] admin directory not found, skipped.');
   process.exit(0);
+}
+
+if (fs.existsSync(userH5Source)) {
+  copyDir(userH5Source, h5Root);
+  console.log(`[copy-admin-to-h5] copied user h5 app from ${userH5Source} to ${h5Root}`);
+} else {
+  console.warn('[copy-admin-to-h5] user h5 app not found, only admin assets will be copied.');
 }
 
 copyDir(adminSource, adminTarget);
