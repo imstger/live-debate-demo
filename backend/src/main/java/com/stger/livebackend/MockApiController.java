@@ -23,6 +23,7 @@ import java.util.UUID;
 @CrossOrigin(origins = "*")
 @RestController
 public class MockApiController {
+    private static final String DEFAULT_JUDGE_AVATAR = "/admin/assets/images/judges/osmanthus.jpg";
     private final Map<String, Object> debate = new LinkedHashMap<>();
     private final List<Map<String, Object>> users = new ArrayList<>();
     private final List<Map<String, Object>> streams = new ArrayList<>();
@@ -912,7 +913,7 @@ public class MockApiController {
         judge.put("id", id);
         judge.put("name", name);
         judge.put("role", role);
-        judge.put("avatar", "");
+        judge.put("avatar", DEFAULT_JUDGE_AVATAR);
         judge.put("votes", leftVotes + rightVotes);
         judge.put("leftVotes", leftVotes);
         judge.put("rightVotes", rightVotes);
@@ -1004,7 +1005,10 @@ public class MockApiController {
             judge.putIfAbsent("id", "judge-" + (i + 1));
             judge.putIfAbsent("name", "评委" + (i + 1));
             judge.putIfAbsent("role", i == 0 ? "主评委" : "嘉宾评委");
-            judge.putIfAbsent("avatar", "");
+            Object avatar = judge.get("avatar");
+            if (avatar == null || String.valueOf(avatar).isBlank()) {
+                judge.put("avatar", DEFAULT_JUDGE_AVATAR);
+            }
             int votes = number(judge.get("votes"), number(judge.get("leftVotes"), 0) + number(judge.get("rightVotes"), 0));
             judge.put("votes", votes);
             judge.putIfAbsent("leftVotes", votes);
