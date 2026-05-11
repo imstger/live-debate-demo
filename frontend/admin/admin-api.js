@@ -8,7 +8,7 @@ const getAPIBase = () => {
 		return window.SERVER_CONFIG.BASE_URL;
 	}
 	// 默认使用本地网关（如果admin.js未加载）
-	return 'http://localhost:8080';
+	return 'https://live-debate-gateway-ap9p.onrender.com';
 };
 
 // 📋 说明：当前配置

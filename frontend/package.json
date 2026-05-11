@@ -9,7 +9,7 @@
     "swagger": "node swagger-server.js",
     "swagger:dev": "nodemon swagger-server.js",
     "dev:h5": "cross-env UNI_CLI_CONTEXT=. UNI_PLATFORM=h5 vue-cli-service uni-serve --mode development",
-    "build:h5": "cross-env UNI_CLI_CONTEXT=. UNI_PLATFORM=h5 vue-cli-service uni-build --mode production",
+    "build:h5": "cross-env UNI_CLI_CONTEXT=. UNI_PLATFORM=h5 vue-cli-service uni-build --mode production && node scripts/copy-admin-to-h5.js",
     "dev:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin vue-cli-service uni-build --mode development",
     "build:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin vue-cli-service uni-build --mode production",
     "postinstall": "node scripts/patch-uni-h5.js"

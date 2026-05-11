@@ -496,7 +496,7 @@ function getAPIBase() {
 	if (window.SERVER_CONFIG && window.SERVER_CONFIG.BASE_URL) {
 		return window.SERVER_CONFIG.BASE_URL;
 	}
-	return 'http://localhost:8081';
+	return 'https://live-debate-gateway-ap9p.onrender.com';
 }
 
 // 导出函数供外部使用

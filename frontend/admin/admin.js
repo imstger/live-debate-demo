@@ -4,9 +4,9 @@ const SERVER_CONFIG = {
 	// 本地开发时使用
 	LOCAL_URL: 'http://localhost:8081',
 	// 中间层网关地址
-	MIDDLEWARE_URL: 'http://localhost:8080',
+	MIDDLEWARE_URL: 'https://live-debate-gateway-ap9p.onrender.com',
 	// 后端服务器地址（本地联调先指向网关）
-	BACKEND_URL: 'http://localhost:8080',
+	BACKEND_URL: 'https://live-debate-gateway-ap9p.onrender.com',
 	// 当前使用的地址（修改这里切换服务器）
 	get BASE_URL() {
 		return this.MIDDLEWARE_URL;
